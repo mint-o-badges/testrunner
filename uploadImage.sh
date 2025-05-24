@@ -1,10 +1,10 @@
 #!/bin/bash
 
-filename="$1.$EPOCHREALTIME.png"
-echo "Uploading file $1 -> filename: $filename"
+filename="$EPOCHREALTIME.png"
+echo "Uploading file $1 -> filename: $filename" >&2
 source secret
 curl "https://cloud.opensenselab.org/remote.php/dav/files/oeb/Shared/$filename" \
-	--user "$nextcloudCredentials" -X PUT --upload-file "$1"
+	--user "$nextcloudCredentials" -X PUT --upload-file "$1" -s
 
 sizeX=`file "$1" -b | sed -E "s/^.* ([0-9]+) x ([0-9]+).*$/\1/g"`
 sizeY=`file "$1" -b | sed -E "s/^.* ([0-9]+) x ([0-9]+).*$/\2/g"`
