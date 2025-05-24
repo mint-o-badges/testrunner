@@ -32,11 +32,17 @@ else
 	serverTime=0
 fi
 
+# Check status of oeb-test
+cd ~/test/oeb-test
+testNew=`git pull | grep --quiet -v "Already up to date." && echo "new"`
+
 if [ -z "$uiNew" ]; then
 	if [ -z "$serverNew" ]; then
-		echo "Nothing new!"
-		rm ~/test/mutex
-		exit 0
+		if [ -z "$testNew" ]; then
+			echo "Nothing new!"
+			rm ~/test/mutex
+			exit 0
+		fi
 	fi
 fi
 
@@ -46,7 +52,7 @@ echo "Something is new!"
 newestTime=`echo -e "$serverTime\n$uiTime" | sort -n | tail -1`
 currentTime=`date +%s`
 elapsed=$((currentTime - newestTime))
-echo "Elapsed time: $elapsed"
+echo "Elapsed time: $elapsed (or new tests)"
 
 # Wait 60s after update to give the application time to settle
 if [ $elapsed -lt 60 ]; then
