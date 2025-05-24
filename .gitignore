@@ -1,0 +1,8 @@
+*.log
+lastFailed
+message
+filtered
+diff
+mutex
+*.swp
+secret

@@ -1,0 +1,3 @@
+[submodule "oeb-test"]
+	path = oeb-test
+	url = git@github.com:mint-o-badges/oeb-test.git
