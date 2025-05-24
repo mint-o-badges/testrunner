@@ -104,7 +104,7 @@ elif [ "$exitCode" -eq "124" ]; then
 	fi
 else
 	echo "Failed!"
-	echo "Tests failed! Note that there are screenshots in /home/ubuntu/test/oeb-test/screenshots. Log:" | ./notify.sh
+	echo "Tests failed! Log:" | ./notify.sh
 	./notify.sh "$attachmentString" < test_output.log
 	touch lastFailed
 fi

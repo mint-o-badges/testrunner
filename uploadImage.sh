@@ -1,6 +1,7 @@
 #!/bin/bash
 
 filename="$1.$EPOCHREALTIME.png"
+echo "Uploading file $1 -> filename: $filename"
 source secret
 curl "https://cloud.opensenselab.org/remote.php/dav/files/oeb/Shared/$filename" \
 	--user "$nextcloudCredentials" -X PUT --upload-file "$1"
