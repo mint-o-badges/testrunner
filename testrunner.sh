@@ -48,16 +48,19 @@ fi
 
 echo "Something is new!"
 
+if [ -z "$testNew" ]; then
+	newestTime=`echo -e "$serverTime\n$uiTime" | sort -n | tail -1`
+	currentTime=`date +%s`
+	elapsed=$((currentTime - newestTime))
+	echo "Elapsed time: $elapsed"
 
-newestTime=`echo -e "$serverTime\n$uiTime" | sort -n | tail -1`
-currentTime=`date +%s`
-elapsed=$((currentTime - newestTime))
-echo "Elapsed time: $elapsed (or new tests)"
-
-# Wait 60s after update to give the application time to settle
-if [ $elapsed -lt 60 ]; then
-	rm ~/test/mutex
-	exit 0
+	# Wait 60s after update to give the application time to settle
+	if [ $elapsed -lt 60 ]; then
+		rm ~/test/mutex
+		exit 0
+	fi
+else
+	echo "New tests found"
 fi
 
 # Delete newVersion indicator in containers
