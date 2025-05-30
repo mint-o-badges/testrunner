@@ -83,8 +83,10 @@ git pull
 set -o pipefail
 timeout 30m docker compose run node 2>&1 | tee ~/test/test_output.log
 exitCode=$?
-
 echo "Exit code is $exitCode"
+
+# Shutdown the containers, to kill off residues of the test run that might interfere with future ones
+docker compose down
 
 cd ~/test
 attachmentString=`./failingScreenshots.sh | ./attachImages.sh`
