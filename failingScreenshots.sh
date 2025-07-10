@@ -12,11 +12,22 @@ while IFS= read -r line || [ -n "$line" ]; do
 		number=`echo "$line" | cut -f1 -d:`
 		withoutNumber=`echo "$line" | sed -E "s/^[0-9]+:(.*)$/\1/"`
 		# Get the indentation count to figure out how nested the test is
-		indentation=`echo "$withoutNumber" | sed -E "s/^( *).*/\1/" | tr -d '\n' | wc -c`
+		withoutIndentation=`echo "$withoutNumber" | xargs`
+		indentation=$((`echo "$withoutNumber" | wc -c`-`echo "$withoutIndentation" | wc -c`))
 		# Get the text of the failed test
 		text=`echo "$withoutNumber" | sed -E "s/^ +[0-9]+\) (.*)$/\1/"`
-		# Get the batch of the failed test; this is the last batch text before this test text
-		batch=`head -n "$number" test_output.log | grep -Ei "^  [a-zA-Z]+ test" | tail -n 1 | xargs`
+
+		# Iterate through the nestings of the batches this failed test is contained in
+		batch=""
+		for indent in $(seq 2 2 "$(("$indentation"-2))");
+		do
+			# Get the latest output before the test with this indentation; this is the batch of the current nesting
+			thisBatch=`head -n "$number" test_output.log | grep -Ei "^ {$indent}[a-zA-Z]" | tail -n 1 | xargs`
+			batch="$batch $thisBatch"
+		done
+		# Trim
+		batch=`echo $batch | xargs`
+
 		# Construct the file name
 		appended="$batch $text"
 		lower=`echo "$appended" | tr '[:upper:]' '[:lower:]'`
