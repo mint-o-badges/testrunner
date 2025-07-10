@@ -15,7 +15,7 @@ while IFS= read -r line || [ -n "$line" ]; do
 		withoutIndentation=`echo "$withoutNumber" | xargs`
 		indentation=$((`echo "$withoutNumber" | wc -c`-`echo "$withoutIndentation" | wc -c`))
 		# Get the text of the failed test
-		text=`echo "$withoutNumber" | sed -E "s/^ +[0-9]+\) (.*)$/\1/"`
+		text=`echo "$withoutIndentation" | sed -E "s/^[0-9]+\) (.*)$/\1/"`
 
 		# Iterate through the nestings of the batches this failed test is contained in
 		batch=""
